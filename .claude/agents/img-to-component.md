@@ -1,7 +1,115 @@
 ---
 name: img-to-component
-description: base64 이미지를 전달받아 컴포넌트로 구현한다.
+description: URL 또는 이미지를 받아 React 컴포넌트로 구현한다. URL이 주어지면 자동으로 섹션별 스크린샷을 찍고 각각 컴포넌트로 변환한다. 클라이언트 홈페이지 빌드 모드도 지원한다.
 model: inherit
+---
+
+## 클라이언트 홈페이지 빌드 모드
+
+`--client=<name>` 파라미터와 `design-system.json` 경로가 함께 주어지면 이 모드로 동작한다.
+
+> **갤러리 모드와 다른 점**: registry 등록 없음, create-registry-component.py 실행 없음, 결과물은 `clients/{name}/components/`에 직접 저장.
+
+### 입력
+- `screenshot`: 섹션 스크린샷 경로 (agent-input/{domain}/section-NN.png)
+- `component`: 출력할 컴포넌트 이름 (Header, Hero, About, Products, Quality, Contact, Footer)
+- `output`: 저장 경로 (clients/{name}/components/{Component}.tsx)
+- `design-system`: agent-input/{domain}/design-system.json 경로
+- `client-info`: 회사명, 슬로건, 연락처 등 클라이언트 정보 텍스트
+
+### 분석 방법 (모넷 품질 기준 동일하게 적용)
+스크린샷을 받으면 아래 항목을 빠짐없이 분석한다:
+- layer들의 **opacity, roundness, border style** 정확히 파악
+- 레이아웃을 **Figma auto-layout** 관점으로 분석 (direction, gap, padding, alignment)
+- background, accent 등 **정확한 color 값** 추출
+- **font-weight, letter-spacing, line-height** 파악
+- 텍스트의 **line break 위치** 파악
+- hover/transition/애니메이션 패턴 파악
+
+### 구현 규칙
+
+**1. Tailwind v4 레이아웃 버그 (CRITICAL)**
+`mx-auto`, `px-*`, `max-w-*` 등 간격 클래스가 컴파일 안 됨 → 모든 컨테이너는 반드시 inline style:
+```tsx
+style={{ maxWidth: 1200, margin: "0 auto", padding: "0 80px" }}
+```
+반응형 그리드는 Tailwind 클래스 사용 가능 (breakpoint만):
+```tsx
+className="grid grid-cols-1 md:grid-cols-2"
+style={{ gap: "48px" }}
+```
+
+**2. 한국어 폰트 표준**
+클라이언트 홈페이지는 한국어가 기본 → `globals.css`에 반드시 Pretendard 적용:
+```css
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+```
+- 본문: `'Pretendard', -apple-system, sans-serif`
+- 영문 제목 포인트: `'Plus Jakarta Sans', 'Pretendard', sans-serif`
+
+**3. 이미지 — Unsplash 실사 사진 사용**
+배경/섹션 이미지가 필요할 때:
+1. 업종 키워드로 `WebSearch` → unsplash.com 사진 페이지 URL 수집
+2. `WebFetch`로 각 페이지에서 `images.unsplash.com/photo-{숫자ID}` CDN URL 추출
+3. `WebFetch`로 `{URL}?w=100&q=80` 404 확인 (검증)
+4. 검증된 URL만 `?w=1920&q=80` 형태로 사용
+
+⚠️ `plus.unsplash.com/premium_photo-` 유료 — 사용 불가  
+⚠️ 슬러그 ID(`XmmL7iNeFWc`)는 CDN URL과 다름 — 반드시 숫자ID 확인
+
+**4. 애니메이션**
+`motion/react`로 scroll-triggered 애니메이션 적용:
+```tsx
+import { motion } from "motion/react";
+<motion.div
+  initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6, ease: "easeOut" }}
+  viewport={{ once: true }}
+/>
+```
+
+**5. 아이콘**
+`lucide-react` 우선 사용. 없는 아이콘: Globe(Facebook), Share2(Twitter), Link(Instagram), ExternalLink(LinkedIn), Play(YouTube)
+
+**6. 컴포넌트 구조**
+- `"use client"` 필요 시 파일 첫 줄
+- `"use client"` 바로 뒤에 모든 import (중간에 삽입 금지)
+- TypeScript 에러 시 `// @ts-nocheck`
+- 결과물: `clients/{name}/components/{Component}.tsx`에 직접 저장
+
+**7. 모바일 반응형**
+- 섹션/footer/header padding은 `globals.css` @media로 처리 (`!important`)
+- 그리드는 Tailwind breakpoint 클래스로 처리
+
+### 출력 파일 예시
+```
+clients/kim-steel/components/Hero.tsx
+clients/kim-steel/components/About.tsx
+```
+
+---
+
+## 입력 방식 (갤러리 모드)
+
+### URL이 주어진 경우
+먼저 스크린샷 스크립트를 실행하세요:
+
+```bash
+node scripts/screenshot-url.js <URL>
+```
+
+스크립트가 `agent-input/{domain}/` 폴더에 섹션별 스크린샷을 저장합니다.
+저장된 이미지 파일 목록을 확인한 후, 각 이미지를 순서대로 아래 절차에 따라 컴포넌트로 변환하세요.
+
+전체 페이지를 한 장으로 찍으려면:
+```bash
+node scripts/screenshot-url.js <URL> --full
+```
+
+### 이미지가 직접 주어진 경우
+`agent-input/` 폴더의 이미지 파일을 바로 사용하세요.
+
 ---
 
 주어진 이미지를 컴포넌트로 구현하세요. 페이지에는 자동으로 배치되니 신경쓰지 않아도 됩니다.
@@ -198,7 +306,7 @@ const itemVariants = {
 - 스크립트 실행 시 지정한 keywords는 search engine이 컴포넌트를 탐색하는 데 사용됩니다. 충분히 다양한 키워드를 지정하세요.
 - 필요한 icon은 `lucide-react`를 우선적으로 사용하세요.
 - 적절한 reveal 등 애니메이션을 `motion/react`, `tw-animate-css`로부터 사용하세요.
-- 절대 playwright-mcp를 사용하지 마세요.
+- playwright는 `node scripts/screenshot-url.js` 스크립트를 통해서만 사용하세요. playwright-mcp는 사용하지 마세요.
 - 절대 `npm run build`를 테스트하지 마세요. index.tsx에 typescript 에러가 없는지만 확인하세요.
 
 ## nanobanana mcp 호출 가이드

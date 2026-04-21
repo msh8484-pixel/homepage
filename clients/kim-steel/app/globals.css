@@ -1,0 +1,86 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+@import "tailwindcss";
+
+:root {
+  --navy: #1a3a6b;
+  --navy-dark: #0f2347;
+  --navy-deep: #0a1228;
+  --gold: #c9a227;
+  --gold-dark: #a97c1f;
+  --font-body: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+  --font-heading: 'Plus Jakarta Sans', 'Pretendard', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; height: 100%; }
+body {
+  font-family: var(--font-body);
+  color: #222;
+  background: #fff;
+  min-height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-heading);
+  letter-spacing: -0.02em;
+}
+
+/* 스티키 푸터 */
+footer { margin-top: auto; }
+
+/* 페이지 배너 (div) */
+.page-banner {
+  padding-left: 80px !important;
+  padding-right: 80px !important;
+}
+
+/* 반응형 — 태블릿 */
+@media (max-width: 1024px) {
+  section { padding-left: 40px !important; padding-right: 40px !important; }
+  footer { padding-left: 40px !important; padding-right: 40px !important; }
+  header > div { padding-left: 40px !important; padding-right: 40px !important; }
+  .page-banner { padding-left: 40px !important; padding-right: 40px !important; }
+}
+
+/* 반응형 — 모바일 */
+@media (max-width: 768px) {
+  section {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+  footer { padding-left: 20px !important; padding-right: 20px !important; }
+  header > div { padding-left: 20px !important; padding-right: 20px !important; }
+  .page-banner {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    padding-bottom: 12px !important;
+  }
+
+  /* 히어로 텍스트 패딩 */
+  .hero-text { padding-left: 24px !important; padding-right: 24px !important; }
+
+  /* 그리드 반응형 */
+  .grid-4-col { grid-template-columns: repeat(2, 1fr) !important; }
+  .grid-3-col { grid-template-columns: repeat(2, 1fr) !important; }
+  .grid-2-col { grid-template-columns: 1fr !important; }
+  .grid-why   { grid-template-columns: 1fr !important; }
+
+  /* WHY 섹션 오른쪽 패널 최소 높이 제한 */
+  .why-right { min-height: 280px !important; }
+
+  /* 큰 제목 */
+  .hero-title { font-size: clamp(32px, 8vw, 52px) !important; }
+  .section-title { font-size: 30px !important; }
+  .stat-number { font-size: 52px !important; }
+
+  /* 화살표 버튼 */
+  .hero-arrow-prev { right: 60px !important; }
+}
+
+@media (max-width: 480px) {
+  .grid-4-col { grid-template-columns: 1fr !important; }
+  .grid-3-col { grid-template-columns: 1fr !important; }
+}
