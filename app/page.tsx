@@ -78,14 +78,14 @@ export default function Home() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {categories.map((cat, i) => (
-            <div key={cat.name} className="card p-5 cursor-pointer group">
+            <a href="mailto:contact@sitely.kr" key={cat.name} className="card p-5 cursor-pointer group">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-mono text-[#bbb]">{String(i + 1).padStart(2, "0")}</span>
                 <span className="text-xs text-[#999] bg-[#f0f0f0] px-2 py-1 rounded-full">{cat.count}종</span>
               </div>
               <h3 className="font-semibold mb-2 group-hover:text-blue-600 transition-colors">{cat.name}</h3>
               <p className="text-[#888] text-sm leading-relaxed">{cat.desc}</p>
-            </div>
+            </a>
           ))}
         </div>
       </section>
