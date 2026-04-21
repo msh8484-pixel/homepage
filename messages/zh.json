@@ -1,0 +1,30 @@
+{
+  "nav": {
+    "about": "公司介绍",
+    "services": "服务",
+    "contact": "联系我们"
+  },
+  "hero": {
+    "title": "绿科韩国",
+    "subtitle": "为更美好的未来而生的技术",
+    "cta": "了解更多"
+  },
+  "about": {
+    "title": "公司介绍",
+    "description": "绿科韩国为可持续发展的未来提供技术解决方案。"
+  },
+  "services": {
+    "title": "服务"
+  },
+  "contact": {
+    "title": "联系我们",
+    "name": "姓名",
+    "email": "电子邮件",
+    "message": "留言",
+    "submit": "发送"
+  },
+  "footer": {
+    "company": "绿科韩国",
+    "rights": "版权所有。"
+  }
+}
