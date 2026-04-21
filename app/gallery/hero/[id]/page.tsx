@@ -12,6 +12,7 @@ import ArtboardHero from "@/components/sitely-hero/artboard-team-hero";
 import AsconHero from "@/components/sitely-hero/ascon-hero";
 import AttioHero from "@/components/sitely-hero/attio-crm-hero";
 import AuctionHero from "@/components/sitely-hero/auction-hero-skyline";
+import DarkWaveHero from "@/components/sitely-hero/sitely-dark-wave-hero/index";
 
 const components: Record<string, { name: string; component: React.ComponentType }> = {
   "a5g-hero": { name: "A5G 대문", component: A5gHero },
@@ -24,6 +25,7 @@ const components: Record<string, { name: string; component: React.ComponentType 
   "ascon-hero": { name: "Ascon 스타일", component: AsconHero },
   "attio-crm-hero": { name: "Attio 스타일", component: AttioHero },
   "auction-hero-skyline": { name: "Skyline 대문", component: AuctionHero },
+  "sitely-dark-wave-hero": { name: "다크 웨이브 대문", component: DarkWaveHero },
 };
 
 export default async function HeroPreviewPage({ params }: { params: Promise<{ id: string }> }) {
