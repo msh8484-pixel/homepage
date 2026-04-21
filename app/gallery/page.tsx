@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 
 const heroes = [
@@ -6,7 +8,7 @@ const heroes = [
   { id: "ahrefs-hero-section", name: "Ahrefs 스타일", tags: ["밝음", "CTA"] },
   { id: "alignui-design-system-hero", name: "AlignUI 스타일", tags: ["디자인", "그리드"] },
   { id: "antimetal-home-hero", name: "Antimetal 스타일", tags: ["다크", "그라디언트"] },
-  { id: "antler-co-hero", name: "Antler 스타일", tags: ["밝음", "투자사"] },
+  { id: "antler-co-hero-0", name: "Antler 스타일", tags: ["밝음", "투자사"] },
   { id: "artboard-team-hero", name: "Artboard 스타일", tags: ["팀", "협업"] },
   { id: "ascon-hero", name: "Ascon 스타일", tags: ["기업", "전문"] },
   { id: "attio-crm-hero", name: "Attio 스타일", tags: ["SaaS", "모던"] },
@@ -27,18 +29,25 @@ export default function GalleryPage() {
           <p className="text-[#888] text-sm">홈페이지 첫 화면에 들어갈 대문 스타일을 골라보세요.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {heroes.map((hero) => (
             <Link href={`/gallery/hero/${hero.id}`} key={hero.id} className="group block">
-              {/* 미리보기 */}
-              <div className="aspect-video bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl mb-3 overflow-hidden group-hover:border-[#ccc] group-hover:shadow-md transition-all flex items-center justify-center relative">
-                <span className="text-[#ccc] text-sm">미리보기 준비중</span>
+              {/* iframe 미리보기 */}
+              <div className="aspect-video border border-[#e5e5e5] rounded-xl mb-3 overflow-hidden group-hover:border-[#ccc] group-hover:shadow-lg transition-all relative bg-[#f9f9f9]">
+                <iframe
+                  src={`/gallery/hero/${hero.id}`}
+                  className="w-full h-full"
+                  style={{ transform: "scale(0.5)", transformOrigin: "top left", width: "200%", height: "200%", pointerEvents: "none" }}
+                  loading="lazy"
+                  title={hero.name}
+                />
+                <div className="absolute inset-0 group-hover:bg-black/5 transition-all" />
                 <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity bg-black text-white text-xs px-3 py-1 rounded-full">
-                  보기 →
+                  전체보기 →
                 </div>
               </div>
               {/* 정보 */}
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between px-1">
                 <span className="text-sm font-medium group-hover:text-blue-600 transition-colors">{hero.name}</span>
                 <div className="flex gap-1.5">
                   {hero.tags.map((tag) => (

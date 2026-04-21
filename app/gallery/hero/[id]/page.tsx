@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import A5gHero from "@/components/sitely-hero/a5g-hero";
 import AgencyHero from "@/components/sitely-hero/agency-hero-with-showcase";
@@ -34,7 +35,6 @@ export default async function HeroPreviewPage({ params }: { params: Promise<{ id
 
   return (
     <div className="min-h-screen">
-      {/* 상단 바 */}
       <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-3 bg-white border-b border-[#e5e5e5]">
         <Link href="/gallery" className="text-sm text-[#666] hover:text-black transition-colors">← 목록으로</Link>
         <span className="text-sm font-medium">{entry.name}</span>
@@ -42,10 +42,10 @@ export default async function HeroPreviewPage({ params }: { params: Promise<{ id
           이 디자인으로 문의
         </a>
       </div>
-
-      {/* 컴포넌트 미리보기 */}
       <div className="pt-12">
-        <Component />
+        <Suspense fallback={<div className="flex items-center justify-center h-96 text-[#999] text-sm">로딩중...</div>}>
+          <Component />
+        </Suspense>
       </div>
     </div>
   );
